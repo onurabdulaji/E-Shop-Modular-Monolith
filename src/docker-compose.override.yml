@@ -1,0 +1,27 @@
+services:
+  eshopdb:
+     container_name: eshopdb
+     environment:
+       - POSTGRES_USER=postgres
+       - POSTGRES_PASSWORD=123456789
+       - POSTGRES_DB=EShopDB
+     restart: always
+     ports:
+       - "5434:5432"
+     volumes:
+       - postgres_eshopdb:/var/lib/postgresql/data/
+
+  distributedcache:
+    container_name: distributedcache
+    restart: always
+    ports:
+      - "6379:6379" 
+       
+  seq:
+    container_name: seq
+    environment:
+      - ACCEPT_EULA=Y
+    restart: always
+    ports:
+      - "5341:5341"
+      - "9091:80" 
