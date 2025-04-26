@@ -1,6 +1,4 @@
-﻿
-
-namespace Catalog.Products.EventHandlers;
+﻿namespace Catalog.Products.EventHandlers;
 public class ProductPriceChangedEventHandler
     (ILogger<ProductPriceChangedEventHandler> logger, IBus bus)
     : INotificationHandler<ProductPriceChangedEvent>
