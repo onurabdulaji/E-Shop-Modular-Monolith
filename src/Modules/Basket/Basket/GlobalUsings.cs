@@ -15,7 +15,7 @@ global using Microsoft.AspNetCore.Routing;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Caching.Distributed;
-global using Shared.CQRS;
+global using Shared.Contracts.CQRS;
 global using Shared.Data;
 global using Shared.Data.Interceptors;
 global using Shared.DDD;

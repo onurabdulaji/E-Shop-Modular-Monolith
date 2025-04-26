@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
-using Shared.CQRS;
+using Shared.Contracts.CQRS;
 
 namespace Shared.Behaviours;
 public class ValidationBehaviour<TRequest, TResponse>
