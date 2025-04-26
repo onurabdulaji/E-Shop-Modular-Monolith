@@ -5,6 +5,7 @@ global using Basket.Data;
 global using Basket.Data.JsonConverters;
 global using Basket.Data.Repository;
 global using Carter;
+global using Catalog.Contracts.Products.Features.GetProductById;
 global using FluentValidation;
 global using Mapster;
 global using MediatR;

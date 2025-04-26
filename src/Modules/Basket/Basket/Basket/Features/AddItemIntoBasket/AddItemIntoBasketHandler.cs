@@ -18,7 +18,7 @@ public class AddItemIntoBasketCommandValidator : AbstractValidator<AddItemIntoBa
 }
 
 internal class AddItemIntoBasketHandler
-    (IBasketRepository repository)
+    (IBasketRepository repository, ISender sender)
     : ICommandHandler<AddItemIntoBasketCommand, AddItemIntoBasketResult>
 {
     public async Task<AddItemIntoBasketResult> Handle(AddItemIntoBasketCommand command, CancellationToken cancellationToken)
@@ -29,14 +29,18 @@ internal class AddItemIntoBasketHandler
 
         // TODO before AddItem , we should call Catalog Module GetProductById
         // Get latest product information and set proce and productName when adding a item
-        //var result = await sender.Send(new GetProductByIdQuery(id));
+
+        var result = await sender.Send(
+            new GetProductByIdQuery(command.ShoppingCartItem.ProductId));
 
         shoppingCart.AddItem(
             command.ShoppingCartItem.ProductId,
             command.ShoppingCartItem.Quantity,
             command.ShoppingCartItem.Color,
-            command.ShoppingCartItem.Price,
-            command.ShoppingCartItem.ProductName
+            result.Product.Price,
+            result.Product.Name
+            //command.ShoppingCartItem.Price,
+            //command.ShoppingCartItem.ProductName
             );
 
         await repository.SaveChangesAsync(command.UserName, cancellationToken);
