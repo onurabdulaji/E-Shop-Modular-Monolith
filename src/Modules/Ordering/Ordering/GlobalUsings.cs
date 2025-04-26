@@ -1,6 +1,7 @@
 ﻿global using Carter;
 global using FluentValidation;
 global using Mapster;
+global using MassTransit;
 global using MediatR;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Http;
@@ -17,5 +18,6 @@ global using Ordering.Orders.ValueObjects;
 global using Shared.Contracts.CQRS;
 global using Shared.DDD;
 global using Shared.Exceptions;
+global using Shared.Messaging.Events;
 global using Shared.Pagination;
 global using System.Reflection;
