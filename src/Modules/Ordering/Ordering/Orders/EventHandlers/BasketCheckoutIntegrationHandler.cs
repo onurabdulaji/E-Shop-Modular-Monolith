@@ -12,6 +12,7 @@ public class BasketCheckoutIntegrationHandler
 
         // create new order and start order fullfillment process
         var createOrderCommand = MapToCreateOrderCommand(context.Message);
+
         await sender.Send(createOrderCommand);
 
     }
@@ -20,7 +21,9 @@ public class BasketCheckoutIntegrationHandler
     {
         // Create full order with incoming event data
         var addressDto = new AddressDto(message.FirstName, message.LastName, message.EmailAddress, message.AddressLine, message.Country, message.State, message.ZipCode);
+
         var paymentDto = new PaymentDto(message.CardName, message.CardNumber, message.Expiration, message.Cvv, message.PaymentMethod);
+
         var orderId = Guid.NewGuid();
 
         var orderDto = new OrderDto(
