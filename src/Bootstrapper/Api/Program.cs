@@ -11,12 +11,13 @@ builder.Host.UseSerilog((context, config) =>
 
 var catalogAssembly = typeof(CatalogModule).Assembly;
 var basketAssembly = typeof(BasketModule).Assembly;
+var orderAssembly = typeof(OrderingModule).Assembly;
 
 builder.Services
-    .AddCarterWithAssemblies(catalogAssembly, basketAssembly);
+    .AddCarterWithAssemblies(catalogAssembly, basketAssembly, orderAssembly);
 
 builder.Services
-    .AddMediatRWithAssemblies(catalogAssembly, basketAssembly);
+    .AddMediatRWithAssemblies(catalogAssembly, basketAssembly, orderAssembly);
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
