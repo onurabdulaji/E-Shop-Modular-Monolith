@@ -13,7 +13,7 @@ public static class BasketModule
 
         // 2. Application Use Cases Services
         services.AddScoped<IBasketRepository, BasketRepository>();
-        services.AddScoped<IBasketRepository, CachedBasketRepository>();
+        //services.AddScoped<IBasketRepository, CachedBasketRepository>();
 
         // 3. Data - Infrastructure Services
         var connectionString = configuration.GetConnectionString("Database");
