@@ -22,6 +22,7 @@ public class CreateBasketEndpoint : ICarterModule
             .Produces<CreateBasketResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Create a new shopping cart")
-            .WithDescription("Create a new shopping cart");
+            .WithDescription("Create a new shopping cart")
+            .RequireAuthorization();
     }
 }
