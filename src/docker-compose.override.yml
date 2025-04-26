@@ -34,7 +34,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
     restart: always
     ports:
-      - "5672:8672"
+      - "5672:5672"
       - "15672:15672" 
 
   identity:
@@ -43,7 +43,7 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_DB=postgres
-      - KC_DB_URL=jdbc:postgressql://eshopdb/EShopDB?currentSchema=identity 
+      - KC_DB_URL=jdbc:postgresql://eshopdb/EShopDB?currentSchema=identity 
       - KC_DB_USERNAME=postgres
       - KC_DB_PASSWORD=123456789
     restart: always
