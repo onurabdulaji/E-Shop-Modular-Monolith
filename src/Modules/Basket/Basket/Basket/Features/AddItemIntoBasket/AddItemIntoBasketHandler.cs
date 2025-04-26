@@ -27,6 +27,10 @@ internal class AddItemIntoBasketHandler
 
         var shoppingCart = await repository.GetBasket(command.UserName, false, cancellationToken);
 
+        // TODO before AddItem , we should call Catalog Module GetProductById
+        // Get latest product information and set proce and productName when adding a item
+        //var result = await sender.Send(new GetProductByIdQuery(id));
+
         shoppingCart.AddItem(
             command.ShoppingCartItem.ProductId,
             command.ShoppingCartItem.Quantity,
