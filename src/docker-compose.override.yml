@@ -42,6 +42,10 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgressql://eshopdb/EShopDB?currentSchema=identity 
+      - KC_DB_USERNAME=postgres
+      - KC_DB_PASSWORD=123456789
     restart: always
     ports:
       - "9090:8080"
