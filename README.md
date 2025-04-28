@@ -1,62 +1,62 @@
-# EShop ASP.NET Core Uygulaması
+# EShop ASP.NET Core Application
 
-Bu proje, modern bir e-ticaret platformunun temelini oluşturan bir ASP.NET Core uygulamasıdır. Mikroservis mimarisi prensiplerine uygun olarak tasarlanmış olup, farklı işlevsel alanları bağımsız modüller ve servisler olarak ele alır.
+This project is an ASP.NET Core application that forms the basis of a modern e-commerce platform. It is designed in accordance with the principles of microservice architecture and treats different functional areas as independent modules and services.
 
-## İçindekiler
+## Contents
 
-1.  [Proje Amacı](#proje-amaci)
-2.  [Mimari Desenler](#mimari-desenler)
-    * [Mikroservis Mimarisi](#mikroservis-mimarisi)
-    * [CQRS (Komut Sorgu Sorumluluk Ayrımı)](#cqrs-komut-sorgu-sorumluluk-ayrimi)
-    * [Olay Güdümlü Mimari (Event-Driven Architecture)](#olay-gudumlu-mimari-event-driven-architecture)
-3.  [Teknolojiler ve Bağımlılıklar](#teknolojiler-ve-bagimliliklar)
-    * [.NET 8.0](#net-80)
-    * [ASP.NET Core](#aspnet-core)
-    * [Carter](#carter)
-    * [MediatR](#mediatr)
-    * [FluentValidation](#fluentvalidation)
-    * [Mapster](#mapster)
-    * [StackExchange.Redis](#stackexchange-redis)
-    * [Npgsql ve Entity Framework Core](#npgsql-ve-entity-framework-core)
-    * [MassTransit](#masstransit)
-    * [Keycloak](#keycloak)
-    * [Serilog](#serilog)
-    * [Docker](#docker)
-    * [Docker Compose](#docker-compose)
-4.  [Proje Yapısı](#proje-yapisi)
-    * [`Bootstrapper/Api`](#bootstrapperapi)
-    * [`Modules/Basket/Basket`](#modulesbasketbasket)
-    * [`Modules/Catalog/Catalog`](#modulescatalogcatalog)
-    * [`Modules/Ordering/Ordering`](#modulesorderingordering)
-    * [`Shared/Shared`](#sharedshared)
-    * [`Shared/Shared.Contracts`](#sharedsharedcontracts)
-    * [`Shared/Shared.Messaging`](#sharedsharedmessaging)
-5.  [Başlangıç ve Yapılandırma](#baslangic-ve-yapilandirma)
-    * [Ön Koşullar](#on-kosullar)
-    * [Yerel Geliştirme İçin Yapılandırma](#yerel-gelistirme-icin-yapilandirma)
-    * [Uygulamanın Çalıştırılması](#uygulamanin-calistirilmasi)
-6.  [Dağıtım](#dagitim)
-    * [Docker Entegrasyonu](#docker-entegrasyonu)
-    * [Docker Compose ile Çalıştırma](#docker-compose-ile-calistirma)
-7.  [İletişim](#iletisim)
-8.  [Katkılar](#katkilar)
-9.  [Lisans](#lisans)
+1. [Project Purpose](#project-purpose)
+2. [Architectural Patterns](#architectural-patterns)
+* [Microservices Architecture](#microservices-architecture)
+* [CQRS (Command Query Responsibility Separation)](#cqrs-command-query-responsibility-separation)
+* [Event-Driven Architecture](#event-driven-architecture)
+3. [Technologies and Dependencies](#technologies-and-dependencies)
+* [.NET 8.0](#net-80)
+* [ASP.NET Core](#aspnet-core)
+* [Carter](#carter)
+* [MediatR](#mediatr)
+* [FluentValidation](#fluentvalidation)
+* [Mapster](#mapster) 
+* [StackExchange.Redis](#stackexchange-redis) 
+* [Npgsql and Entity Framework Core](#npgsql-and-entity-framework-core) 
+* [MassTransit](#masstransit) 
+* [Keycloak](#keycloak) 
+* [Serilog](#serilog) 
+* [Docker](#docker) 
+* [Docker Compose](#docker-compose)
+4. [Project Structure](#project-structure) 
+* [`Bootstrapper/Api`](#bootstrapperapi) 
+* [`Modules/Basket/Basket`](#modulesbasketbasket) 
+* [`Modules/Catalog/Catalog`](#modulescatalogcatalog) 
+* [`Modules/Ordering/Ordering`](#modulesorderingordering)
+* [`Shared/Shared`](#sharedshared)
+* [`Shared/Shared.Contracts`](#sharedsharedcontracts)
+* [`Shared/Shared.Messaging`](#sharedsharedmessaging)
+5. [Getting Started and Configuring](#getstarted-and-configuring)
+* [Prerequisites](#prerequisites)
+* [Configuring for Local Development](#configuring-for-local-development)
+* [Running the Application](#running-the-application)
+6. [Deployment](#deployment)
+* [Docker Integration](#docker-integration)
+* [Running with Docker Compose](#running-with-docker-compose)
+7. [Contact](#contact)
+8. [Contributions](#contributions)
+9. [License](#license)
 
-## 1. Proje Amacı
+## 1. Project Purpose
 
-Bu e-ticaret platformu projesi, ölçeklenebilir, bakımı kolay ve modern bir alışveriş deneyimi sunmayı hedeflemektedir. Farklı işlevsel alanları (ürün kataloğu, sepet yönetimi, sipariş işleme, kimlik doğrulama vb.) birbirinden bağımsız servisler olarak ele alarak, her birinin ayrı ayrı geliştirilmesini, test edilmesini ve ölçeklendirilmesini mümkün kılar.
+This e-commerce platform project aims to provide a scalable, maintainable and modern shopping experience. By treating different functional areas (product catalog, cart management, order processing, authentication, etc.) as independent services, it allows each of them to be developed, tested and scaled separately.
 
-## 2. Mimari Desenler
+## 2. Architectural Patterns
 
-Bu proje, aşağıdaki temel mimari desenleri üzerine inşa edilmiştir:
+This project is built on the following basic architectural patterns:
 
-### Mikroservis Mimarisi
+### Microservices Architecture
 
-Uygulama, farklı işlevsel alanları temsil eden bağımsız servislerden oluşur. Bu servisler, kendi veritabanlarına sahip olabilir ve birbirleriyle iyi tanımlanmış API'ler veya mesajlaşma sistemleri aracılığıyla iletişim kurarlar. Bu yaklaşım, büyük ve karmaşık uygulamaların daha küçük, yönetilebilir parçalara ayrılmasını sağlar.
+The application consists of independent services representing different functional areas. These services may have their own databases and communicate with each other through well-defined APIs or messaging systems. This approach allows large and complex applications to be broken down into smaller, manageable pieces.
 
-### CQRS (Komut Sorgu Sorumluluk Ayrımı)
+### CQRS (Command Query Responsibility Separation)
 
-Bazı modüllerde (örneğin, Sipariş), Komut ve Sorgu Sorumluluklarının Ayrılması (CQRS) deseni uygulanmıştır. Bu desen, veri yazma (Komutlar) ve veri okuma (Sorgular) işlemlerini birbirinden ayırarak daha iyi performans, ölçeklenebilirlik ve model karmaşıklığını yönetme imkanı sunar. Projede kullanılan temel CQRS arayüzleri şunlardır:
+In some modules (for example, Order), the Command and Query Responsibility Separation (CQRS) pattern has been implemented. This pattern separates data writing (Commands) and data reading (Queries) operations, providing better performance, scalability, and the ability to manage model complexity. The main CQRS interfaces used in the project are:
 
 ```csharp
 public interface ICommand : ICommand<Unit> { }
@@ -66,240 +66,238 @@ public interface ICommandHandler<in TCommand, TResponse> : IRequestHandler<TComm
 public interface IQuery<out T> : IRequest<T> where T : notnull { }
 public interface IQueryHandler<in TQuery, TResponse> : IRequestHandler<TQuery, TResponse> where TQuery : IQuery<TResponse> where TResponse : notnull { }
 ```
-Bu arayüzler, komutları, sorguları ve bunları işleyen işleyicileri (handler) tanımlamak için kullanılır ve MediatR kütüphanesiyle entegre bir şekilde çalışır.
+These interfaces are used to define commands, queries and the handlers that process them and work in integration with the MediatR library.
 
-### Olay Güdümlü Mimari (Event-Driven Architecture)
+### Event-Driven Architecture
 
-Servisler arasındaki bazı iletişimler, olaylar aracılığıyla asenkron olarak gerçekleştirilir. Bir serviste meydana gelen önemli bir durum değişikliği (örneğin, sepet ödemesi tamamlandı, ürün fiyatı değişti) bir olay olarak yayınlanır ve ilgili diğer servisler bu olayı dinleyerek kendi bağlamlarında gerekli işlemleri gerçekleştirirler. Bu, servisler arasındaki bağımlılığı azaltır ve daha esnek bir sistem sağlar. Projede kullanılan temel entegrasyon olayları şunlardır:
+Some communication between services is performed asynchronously via events. A significant status change in a service (e.g. basket payment completed, product price changed) is published as an event, and other related services listen to this event and perform the necessary actions in their own contexts. This reduces the dependency between services and provides a more flexible system. The basic integration events used in the project are:
 
 ```csharp
 public record IntegrationEvent
 {
-    public Guid EventId => Guid.NewGuid();
-    public DateTime OccuredOn => DateTime.UtcNow;
-    public string EventType => GetType().AssemblyQualifiedName;
+public Guid EventId => Guid.NewGuid();
+public DateTime OccuredOn => DateTime.UtcNow;
+public string EventType => GetType().AssemblyQualifiedName;
 }
 
 public record BasketCheckoutIntegrationEvent : IntegrationEvent
 {
-    public string UserName { get; set; } = default!;
-    public Guid CustomerId { get; set; } = default!;
-    public decimal TotalPrice { get; set; } = default!;
-    // ... (Diğer teslimat, fatura ve ödeme bilgileri)
+public string UserName { get; set; } = default!;
+public Guid CustomerId { get; set; } = default!;
+public decimal TotalPrice { get; set; } = default!; 
+// ... (Other delivery, billing and payment information)
 }
 
 public record ProductPriceChangedIntegrationEvent : IntegrationEvent
-{
-    public Guid ProductId { get; set; } = default!;
-    public string Name { get; set; } = default!;
-    public List<string> Category { get; set; } = default!;
-    public string Description { get; set; } = default!;
-    public string ImageFile { get; set; } = default!;
-    public decimal Price { get; set; } = default!;
+{ 
+public Guid ProductId { get; set; } = default!; 
+public string Name { get; set; } = default!; 
+public List<string> Category { get; set; } = default!; 
+public string Description { get; set; } = default!; 
+public string ImageFile { get; set; } = default!; 
+public decimal Price { get; set; } = default!;
 }
 ```
 
-Bu olaylar, `IntegrationEvent` temel sınıfından miras alır ve servisler arasında bilgi paylaşımını sağlamak için kullanılır.
+These events inherit from the `IntegrationEvent` base class and are used to share information between services.
 
-## 3\. Teknolojiler ve Bağımlılıklar
+## 3\. Technologies and Dependencies
 
-Bu proje aşağıdaki temel teknolojileri ve kütüphaneleri kullanmaktadır:
+This project uses the following core technologies and libraries:
 
- * **[.NET 8.0]:** Uygulamanın geliştirildiği ve çalıştırıldığı en son .NET platformu.
-  * **[ASP.NET Core]:** Modern, bulut tabanlı uygulamalar geliştirmek için kullanılan açık kaynaklı framework.
-  * **[Carter (8.1.0)]:** Minimal API yaklaşımını benimseyen hafif bir web framework'ü. Rotaları modüller halinde organize etmeyi sağlar.
-  * **[MediatR (12.2.0)]:** Uygulama içi mesajlaşma ve CQRS gibi desenleri uygulamayı kolaylaştıran bir kütüphane.
-  * **[FluentValidation (11.11.0) ve FluentValidation.AspNetCore (11.3.0) ve FluentValidation.DependencyInjectionExtensions (11.11.0)]:** Yapılandırılmış ve akıcı bir şekilde veri doğrulama kuralları tanımlamak için kullanılan bir kütüphane. ASP.NET Core entegrasyonu ve bağımlılık enjeksiyonu (dependency injection) desteği içerir.
-  * **[Mapster (7.4.0)]:** Nesneler arasında otomatik ve performanslı bir şekilde eşleme (mapping) yapmak için kullanılan bir kütüphane.
-  * **[StackExchange.Redis (2.7.17)]:** Yüksek performanslı bir anahtar-değer deposu olan Redis ile etkileşim kurmak için kullanılan .NET istemci kütüphanesi. Dağıtılmış önbellekleme için kullanılır.
-  * **[Npgsql.EntityFrameworkCore.PostgreSQL (8.0.11) ve Microsoft.EntityFrameworkCore (8.0.11) ve Microsoft.EntityFrameworkCore.Tools (8.0.11)]:** .NET uygulamalarında PostgreSQL veritabanı ile etkileşim kurmayı kolaylaştıran Entity Framework Core ORM framework'ü ve PostgreSQL sağlayıcısı.
-  * **[MassTransit (8.2.2)]:** .NET için dağıtılmış mesajlaşma altyapısını basitleştiren bir framework. Farklı mesaj taşıma teknolojilerini (örneğin, RabbitMQ) destekler ve tüketici (consumer), saga gibi kavramları yönetmeyi kolaylaştırır. Projede `AddMassTransitWithAssemblies` genişletme metodu kullanılarak belirtilen assembly'lerdeki tüm MassTransit bileşenleri otomatik olarak yapılandırılır.
-  * **[Keycloak (24.0.3)]:** Açık kaynaklı bir kimlik ve erişim yönetimi sunucusu. Uygulamanın güvenliğini sağlamak için kullanılır. Projede `AddKeycloakWebApiAuthentication` genişletme metodu ile entegre edilmiştir.
-  * **[Serilog (3.1.1)]:** Zengin loglama yetenekleri sunan bir .NET loglama kütüphanesi. Yapılandırma, `appsettings.json` dosyasından okunur ve loglar konsola ve Seq loglama sunucusuna yazdırılır.
-  * **[Docker]:** Uygulamayı ve bağımlılıklarını konteynerler içinde paketlemeyi sağlayan bir platform.
-  * **[Docker Compose]:** Birden fazla Docker konteynerini tek bir YAML dosyası ile tanımlayıp yönetmeyi sağlayan bir araç.
+* **[.NET 8.0]:** The latest .NET platform on which the application is developed and runs.
+* **[ASP.NET Core]:** An open source framework used to develop modern, cloud-based applications.
+* **[Carter (8.1.0)]:** A lightweight web framework that adopts a minimal API approach. It allows organizing routes into modules.
+* **[MediatR (12.2.0)]:** A library that makes it easy to implement patterns such as in-app messaging and CQRS.
+* **[FluentValidation (11.11.0) and FluentValidation.AspNetCore (11.3.0) and FluentValidation.DependencyInjectionExtensions (11.11.0)]:** A library for defining structured and fluent data validation rules. Includes ASP.NET Core integration and dependency injection support.
+* **[Mapster (7.4.0)]:** A library for automatic and performant mapping between objects.
+* **[StackExchange.Redis (2.7.17)]:** .NET client library for interacting with Redis, a high-performance key-value store. Used for distributed caching.
+* **[Npgsql.EntityFrameworkCore.PostgreSQL (8.0. 11) and Microsoft.EntityFrameworkCore (8.0. 11) and Microsoft.EntityFrameworkCore.Tools (8.0. 11)]:** Entity Framework Core ORM framework and PostgreSQL provider that simplifies interaction with PostgreSQL database in .NET applications.
+* **[MassTransit (8.2. 2)]:** A framework that simplifies distributed messaging infrastructure for .NET. It supports different message transport technologies (for example, RabbitMQ) and makes it easy to manage concepts such as consumer, saga, etc. All MassTransit components in the specified assemblies are automatically configured using the `AddMassTransitWithAssemblies` extension method in the project.
+* **[Keycloak (24.0. 3)]:** An open source identity and access management server. Used to secure the application. Integrated in the project with the `AddKeycloakWebApiAuthentication` extension method.
+* **[Serilog (3.1.1)]:** A .NET logging library that provides rich logging capabilities. The configuration is read from the `appsettings.json` file and the logs are written to the console and the Seq logging server.
+* **[Docker]:** A platform that allows packaging the application and its dependencies in containers.
+* **[Docker Compose]:** A tool that allows defining and managing multiple Docker containers with a single YAML file.
 
+  ## 4\. Project Structure
 
-  ## 4\. Proje Yapısı
+The project is divided into the following main folders and projects:
 
-Proje, aşağıdaki ana klasör ve projelere ayrılmıştır:
+* **`Bootstrapper/Api`:** ASP.NET Core API project, which is the entry point of the application. Registration of services, configuration of middleware, and integration of modules are done here.
+* **`Modules/Basket/Basket`:** Module project containing business logic and API endpoints related to basket management.
+* **`Modules/Catalog/Catalog`:** Module project containing business logic and API endpoints related to product catalog management.
+* **`Modules/Ordering/Ordering`:** Module project containing business logic, API endpoints, and CQRS application related to order processing.
+* **`Shared/Shared`:** Project containing basic helper classes and extension methods used in common by all modules.
+* **`Shared/Shared.Contracts`:** Project containing contracts (interfaces, DTOs, CQRS interfaces) shared between modules.
 
-  * **`Bootstrapper/Api`:** Uygulamanın giriş noktası olan ASP.NET Core API projesi. Servislerin kaydı, ara katman yazılımı (middleware) yapılandırması ve modüllerin entegrasyonu burada yapılır.
-  * **`Modules/Basket/Basket`:** Sepet yönetimi ile ilgili iş mantığını ve API uç noktalarını (endpoint) içeren modül projesi.
-  * **`Modules/Catalog/Catalog`:** Ürün kataloğu yönetimi ile ilgili iş mantığını ve API uç noktalarını içeren modül projesi.
-  * **`Modules/Ordering/Ordering`:** Sipariş işleme ile ilgili iş mantığını, API uç noktalarını ve CQRS uygulamasını içeren modül projesi.
-  * **`Shared/Shared`:** Tüm modüller tarafından ortak olarak kullanılan temel yardımcı sınıfları ve genişletme metotlarını içeren proje.
-  * **`Shared/Shared.Contracts`:** Modüller arasında paylaşılan sözleşmeleri (arayüzler, DTO'lar, CQRS arayüzleri) içeren proje.
-  * **`Shared/Shared.Messaging`:** Entegrasyon olayları ve MassTransit ile ilgili yapılandırmaları içeren proje.
+* **`Shared/Shared.Messaging`:** Project containing integration events and MassTransit related configurations.
 
-  ## 5\. Başlangıç ve Yapılandırma
+## 5\. Getting Started and Configuring
 
-### Ön Koşullar
+### Prerequisites
 
-Uygulamayı yerel olarak geliştirmek ve çalıştırmak için aşağıdaki yazılımların sisteminizde kurulu olması gerekmektedir:
+To develop and run the application locally, the following software must be installed on your system:
 
-  * [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-  * [Docker](https://www.docker.com/products/docker-desktop/) (isteğe bağlı, konteynerleştirilmiş ortam için)
-  * [Docker Compose](https://docs.docker.com/compose/install/) (isteğe bağlı, çoklu konteyner ortamı için)
+* [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+* [Docker](https://www.docker.com/products/docker-desktop/) (optional, for containerized environment)
+* [Docker Compose](https://docs.docker.com/compose/install/) (optional, for multi-container environment)
 
-### Yerel Geliştirme İçin Yapılandırma
+### Configuring for Local Development
 
-1.  Proje reposunu klonlayın:
+1. Clone the project repo:
 
-    ```bash
-    git clone <proje_reposu_url>
-    cd <proje_dizini>
-    ```
+```bash
+git clone <project_repository_url>
+cd <project_directory>
+```
 
-2.  `appsettings.json` dosyasını inceleyin ve yerel geliştirme ortamınıza uygun bağlantı dizelerini ve diğer ayarları yapılandırın. Özellikle veritabanı (`ConnectionStrings:Database`), Redis (`ConnectionStrings:Redis`), mesaj brokerı (`MessageBroker`), Keycloak (`Keycloak`) ve Seq (`Serilog:WriteTo:Seq:Args:serverUrl`) ayarlarını kontrol edin.
+2. Review the `appsettings.json` file and configure the connection strings and other settings appropriate for your local development environment. Specifically check the database (`ConnectionStrings:Database`), Redis (`ConnectionStrings:Redis`), message broker (`MessageBroker`), Keycloak (`Keycloak`), and Seq (`Serilog:WriteTo:Seq:Args:serverUrl`) settings.
 
-### Uygulamanın Çalıştırılması
+### Running the Application
 
-Uygulamayı yerel olarak çalıştırmanın birkaç yolu vardır:
+There are several ways to run the application locally:
 
-  * **Visual Studio veya benzeri bir IDE kullanarak:** Projeyi IDE'de açın ve `Bootstrapper/Api` projesini başlatın.
+* **Using Visual Studio or a similar IDE:** Open the project in the IDE and start the `Bootstrapper/Api` project.
 
-  * **.NET CLI kullanarak:**
+* **Using the .NET CLI:**
 
-    ```bash
-    cd Bootstrapper/Api
-    dotnet run
-    ```
+```bash
+cd Bootstrapper/Api
+dotnet run
+```
 
-## 6\. Dağıtım
+## 6\. Deployment
 
-### Docker Entegrasyonu
+### Docker Integration
 
-Bu proje, Docker ile konteynerleştirilmiştir. Proje kök dizininde bir `Dockerfile` (`Bootstrapper/Api/Dockerfile`) bulunmaktadır. Bu dosya, uygulamanın Docker imajının nasıl oluşturulacağını tanımlar. Çok aşamalı (multi-stage) build kullanılarak imaj boyutu optimize edilmiştir.
+This project is containerized with Docker. There is a `Dockerfile` (`Bootstrapper/Api/Dockerfile`) in the project root directory. This file defines how to build the Docker image of the application. The image size is optimized using multi-stage build.
 
-### Docker Compose ile Çalıştırma
+### Running with Docker Compose
 
-Uygulamanın tüm bağımlılıklarını (PostgreSQL, Redis, Seq, RabbitMQ, Keycloak) tek bir komutla ayağa kaldırmak için `docker-compose.yml` dosyası kullanılır.
+The `docker-compose.yml` file is used to pull up all the dependencies of the application (PostgreSQL, Redis, Seq, RabbitMQ, Keycloak) with a single command.
 
-1.  Proje kök dizininde aşağıdaki komutu çalıştırın:
+1. Run the following command in the project root directory:
 
-    ```bash
-    docker-compose up -d
-    ```
+```bash
+docker-compose up -d
+```
 
-    Bu komut, tüm tanımlı servisleri arka planda başlatır.
+This command starts all the defined services in the background.
 
-2.  Servislerin durumunu kontrol etmek için:
+2. To check the status of services:
 
-    ```bash
-    docker-compose ps
-    ```
+```bash
+docker-compose ps
+```
 
-3.  Uygulamaya aşağıdaki adreslerden erişebilirsiniz:
+3. You can access the application from the following addresses:
 
-      * API: `http://localhost:6000` (HTTP) veya `https://localhost:6060` (HTTPS - sertifika yapılandırmasına bağlı)
-      * Seq: `http://localhost:5341` (UI)
-      * RabbitMQ Yönetim Arayüzü: `http://localhost:15672` (kullanıcı adı/parola: `guest/guest`)
-      * Keycloak: `http://localhost:9090` (yönetici kullanıcı adı/parola: `admin/admin`)
+* API: `http://localhost:6000` (HTTP) or `https://localhost:6060` (HTTPS - depends on certificate configuration)
+* Seq: `http://localhost:5341` (UI)
+* RabbitMQ Management Interface: `http://localhost:15672` (username/password: `guest/guest`)
+* Keycloak: `http://localhost:9090` (admin username/password: `admin/admin`)
 
-
-**`docker-compose.yml` Dosyası İçeriği:**
+ 
+**`docker-compose.yml` File Content:**
 
 ```yaml
-services:
-  eshopdb:
-    container_name: eshopdb
-    image: postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=123456789
-      - POSTGRES_DB=EShopDB
-    restart: always
-    ports:
-      - "5434:5432"
-    volumes:
-      - postgres_eshopdb:/var/lib/postgresql/data/
+services: 
+eshopdb: 
+container_name: eshopdb 
+image: postgres 
+environment: 
+- POSTGRES_USER=postgres 
+- POSTGRES_PASSWORD=123456789 
+- POSTGRES_DB=EShopDB 
+restart: always 
+ports: 
+- "5434:5432" 
+volumes: 
+- postgres_eshopdb:/var/lib/postgresql/data/ 
 
-  distributedcache:
-    container_name: distributedcache
-    image: redis
-    restart: always
-    ports:
-      - "6379:6379"
+distributedcache: 
+container_name: distributedcache 
+image: redis 
+restart: always 
+ports: 
+- "6379:6379" 
 
-  seq:
-    container_name: seq
-    image: datalust/seq:latest
-    environment:
-      - ACCEPT_EULA=Y
-    restart: always
-    ports:
-      - "5341:5341"
-      - "9091:80"
+seq: 
+container_name: seq 
+image: datalust/seq:latest 
+environment: 
+- ACCEPT_EULA=Y 
+restart: always 
+ports: 
+- "5341:5341" 
+- "9091:80" 
 
-  messagebus:
-    container_name: messagebus
-    hostname: ecommerce-mq
-    image: rabbitmq:management
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    restart: always
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+messagebus: 
+container_name: messagebus 
+hostname: ecommerce-mq 
+image: rabbitmq:management 
+environment: 
+- RABBITMQ_DEFAULT_USER=guest 
+- RABBITMQ_DEFAULT_PASS=guest 
+restart: always 
+ports: 
+- "5672:5672" 
+- "15672:15672" 
 
-  identity:
-    container_name: identity
-    image: quay.io/keycloak/keycloak:24.0.3
-    environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
-      - KC_DB=postgres
-      - KC_DB_URL=jdbc:postgresql://eshopdb/EShopDB?currentSchema=identity
-      - KC_DB_USERNAME=postgres
-      - KC_DB_PASSWORD=123456789
-      - KC_HOSTNAME=http://identity:9090/
-      - KC_HTTP_PORT=9090
-    restart: always
-    ports:
-      - "9090:9090"
-    command:
-      - start-dev
+identity: 
+container_name: identity 
+image: quay.io/keycloak/keycloak:24.0.3 
+environment: 
+- KEYCLOAK_ADMIN=admin 
+- KEYCLOAK_ADMIN_PASSWORD=admin 
+- KC_DB=postgres 
+- KC_DB_URL=jdbc:postgresql://eshopdb/EShopDB?currentSchema=identity 
+- KC_DB_USERNAME=postgres 
+- KC_DB_PASSWORD=123456789 
+- KC_HOSTNAME=http://identity:9090/ 
+- KC_HTTP_PORT=9090 
+restart: always 
+ports: 
+- "9090:9090" 
+command: 
+- start-dev 
 
-  api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Server=eshopdb;Port=5432;Database=BasketDb;User Id=postgres;Password=123456789;Include Error Detail=true
-      - ConnectionStrings__Redis=distributedcache:6379
-      - MessageBroker__Host=amqp://ecommerce-mq:5672
-      - MessageBroker__UserName=guest
-      - MessageBroker__Password=guest
-      - Keycloak__AuthServerUrl=http://identity:9090
-      - Serilog__Using__0=Serilog.Sinks.Console
-      - Serilog__Using__1=Serilog.Sinks.Seq
-      - Serilog__MinimumLevel__Default=Information
-      - Serilog__MinimumLevel__Override__Microsoft=Information
-      - Serilog__MinimumLevel__Override__System=Warning
-      - Serilog__WriteTo__0__Name=Console
-      - Serilog__WriteTo__1__Name=Seq
-      - Serilog__WriteTo__1__Args__serverUrl=http://seq:5341
-      - Serilog__Enrich__0=FromLogContext
-      - Serilog__Enrich__1=WithMachineName
-      - Serilog__Enrich__2=WithProcessId
-      - Serilog__Enrich__3=WithThreadId
-      - Serilog__Properties__Application=EShop ASP.NET Core App
-      - Serilog__Properties__Environment=Development
-    depends_on:
-      - eshopdb
-      - distributedcache
-      - seq
-      - messagebus
-      - identity
-    ports:
-      - "6000:8080"
-      - "6060:8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-      volumes:
-    postgres_eshopdb:
+api: 
+environment: 
+- ASPNETCORE_ENVIRONMENT=Development 
+- ASPNETCORE_HTTP_PORTS=8080 
+- ASPNETCORE_HTTPS_PORTS=8081 
+- ConnectionStrings__Database=Server=eshopdb;Port=5432;Database=BasketDb;User Id=postgres;Password=123456789;Include Error Detail=true 
+- ConnectionStrings__Redis=distributedcache:6379 
+- MessageBroker__Host=amqp://ecommerce-mq:5672 
+- MessageBroker__UserName=guest 
+- MessageBroker__Password=guest 
+- Keycloak__AuthServerUrl=http://identity:9090 
+- Serilog__Using__0=Serilog.Sinks.Console 
+- Serilog__Using__1=Serilog.Sinks.Seq 
+- Serilog__MinimumLevel__Default=Information 
+- Serilog__MinimumLevel__Override__Microsoft=Information 
+- Serilog__MinimumLevel__Override__System=Warning 
+- Serilog__WriteTo__0__Name=Console 
+- Serilog__WriteTo__1__Name=Seq 
+- Serilog__WriteTo__1__Args__serverUrl=http://seq:5341 
+- Serilog__Enrich__0=FromLogContext 
+- Serilog__Enrich__1=WithMachineName 
+- Serilog__Enrich__2=WithProcessId 
+- Serilog__Enrich__3=WithThreadId 
+- Serilog__Properties__Application=EShop ASP.NET Core App 
+- Serilog__Properties__Environment=Development 
+depends_on: 
+-eshopdb 
+-distributedcache 
+-seq 
+-messagebus 
+-identity 
+ports: 
+- "6000:8080" 
+- "6060:8081" 
+volumes: 
+- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro 
+- ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro 
+- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro 
+- ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
